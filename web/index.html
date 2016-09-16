@@ -1,0 +1,59 @@
+<html>
+<head>
+    <link rel="styles.css" href="static/styles.css"></head>
+</head>
+<body>
+<h1>This is my search page</h1>
+
+<form method="GET" action="">
+    <p>Enter search terms:</p>
+
+    <input type="text" name="searchText" onkeyup="getSearchResults(this.value)" />
+    <input type="submit" />
+
+</form>
+
+<div id="results" style="width: 700px;">
+</div>
+
+<img id="poster" src="" style="float: right;">
+
+</body>
+<script>
+    var movieRequest;
+        function getSearchResults(searchText) {
+            clearTimeout(movieRequest);
+            movieRequest = setTimeout(function() {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {         
+                var data = JSON.parse(this.responseText);
+                console.log(data);
+                var results = document.getElementById("results");
+                results.innerHTML = '';
+
+                var ul = document.createElement('ul');
+                for (var i in data) {
+                    var li = document.createElement('li');
+                    li.innerHTML = i + ': ' + data[i];
+                    ul.appendChild(li); 
+                }
+                results.appendChild(ul);
+
+                var poster = document.getElementById('poster');
+                poster.src = data.Poster;
+                
+
+            }
+        };
+    
+            xhttp.open("GET", "http://www.omdbapi.com/?t=" + searchText + "&y=&plot=short&r=json", true);
+            xhttp.send();
+        }, 1000);
+        
+}
+
+    </script>
+
+</html>
